@@ -208,3 +208,25 @@ export let CoughMuteBehaviours = [
     "Mute to Phones",
     "Mute to Line Out"
 ]
+
+export let EqMiniFreqs = [
+    "Equalizer90Hz",
+    "Equalizer250Hz",
+    "Equalizer500Hz",
+    "Equalizer1KHz",
+    "Equalizer3KHz",
+    "Equalizer8KHz",
+]
+
+export let EqFreqs = [
+    "Equalizer31Hz",
+    "Equalizer63Hz",
+    "Equalizer125Hz",
+    "Equalizer250Hz",
+    "Equalizer500Hz",
+    "Equalizer1KHz",
+    "Equalizer2KHz",
+    "Equalizer4KHz",
+    "Equalizer8KHz",
+    "Equalizer16KHz",
+]
