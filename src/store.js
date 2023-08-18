@@ -1,5 +1,6 @@
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 import { applyOperation } from "fast-json-patch";
+import { websocket } from "@/util/sockets";
 
 
 export const store = reactive({
@@ -7,6 +8,8 @@ export const store = reactive({
     have_device: false,
     active: true,
     activeSerial: "",
+
+    activeBank: "A",
 
     pausedPaths: [],
 
@@ -138,7 +141,10 @@ export const store = reactive({
                 if (this.pausedPaths.includes(patch.path)) {
                     continue;
                 }
-
+                if (JSON.stringify(patch).search("active_bank") !== -1) {
+                    this.activeBank = patch.value;
+                }
+                
                 applyOperation(this.status, patch, true, true, false);
             }
             this.validateActive();
@@ -171,5 +177,51 @@ export const store = reactive({
     },
     setAccessibilityNotification(type, message) {
         this.a11y.notifications[type] = message;
+    }
+});
+
+
+var active_bank = store.activeBank;
+var banks = {
+  ["A"]: [
+        { id: "A", light: [], channel: "Mic" },
+        { id: "B", light: [], channel: "Chat" },
+        { id: "C", light: [], channel: "Game" },
+        { id: "D", light: [], channel: "System" }
+      ],
+  ["B"]: [
+        { id: "A", light: [], channel: "LineOut" },
+        { id: "B", light: [], channel: "LineIn" },
+        { id: "C", light: [], channel: "Headphones" },
+        { id: "D", light: [], channel: "Sample" }
+      ],
+  ["C"]: [
+        { id: "A", light: [], channel: "Console" },
+        { id: "B", light: [], channel: "Music" },
+        { id: "C", light: [], channel: "LineOut" },
+        { id: "D", light: [], channel: "Chat" }
+      ],
+};
+
+console.log(banks["A"]);
+
+watch(store, async () => {
+    try {
+        let b = store.activeBank;
+
+        if (b !== active_bank) {
+            active_bank = b;
+
+            for (let i = 0; i < banks[active_bank].length; i++) {
+                let command = {
+                    "SetFader": [banks[active_bank][i].id, banks[active_bank][i].channel]
+                }
+                
+                websocket.send_command(store.getActiveSerial(), command);
+                store.getActiveDevice().fader_status[banks[active_bank][i].id].channel = banks[active_bank][i].channel;
+            }
+        }
+    } catch (error) {
+        console.log(error);
     }
 });

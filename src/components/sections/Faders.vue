@@ -24,7 +24,7 @@ export default {
   components: { GroupContainer, RadioSelection },
   name: "MicFaders",
 
-  data() {
+  data(){
     return {
       activeChannel: "A",
 
