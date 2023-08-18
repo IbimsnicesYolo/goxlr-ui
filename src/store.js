@@ -186,10 +186,10 @@ export const store = reactive({
 var active_bank = store.activeBank;
 var banks = {
   ["A"]: [
-    { id: "A", channel: "Console", light: {"style":"TwoColour","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text": null,"inverted":true}}},
+    { id: "A", channel: "Game", light: {"style":"TwoColour","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text": null,"inverted":true}}},
     { id: "B", channel: "Mic", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}},
-    { id: "C", channel: "LineOut", light: {"style":"Gradient","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}},
-    { id: "D", channel: "Music", light: {"style":"Meter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}}
+    { id: "C", channel: "LineIn", light: {"style":"Gradient","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}},
+    { id: "D", channel: "System", light: {"style":"Meter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}}
   ],
   ["B"]: [
     { id: "A", channel: "Console", light: {"style":"TwoColour","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text": null,"inverted":true}}},
@@ -215,6 +215,7 @@ watch(store, async () => {
             active_bank = b;
 
             for (let i = 0; i < banks[active_bank].length; i++) {
+                await new Promise(r => setTimeout(r, 100));
                 let fader = banks[active_bank][i];
                 websocket.send_command(store.getActiveSerial(), {"SetFader": [fader.id, fader.channel]});
 
@@ -228,7 +229,6 @@ watch(store, async () => {
                 websocket.send_command(store.getActiveSerial(), {"SetFaderColours": [fader.id, l["colours"]["colour_one"], l["colours"]["colour_two"]]});
                 websocket.send_command(store.getActiveSerial(), {"SetButtonColours": [MuteButtonNamesForFader[fader.id], l["coloursM"]["colour_one"], l["coloursM"]["colour_two"]]});
                 websocket.send_command(store.getActiveSerial(), {"SetButtonOffStyle": [MuteButtonNamesForFader[fader.id], l["off_style"]]}); // DimmedColour2 , Dimmed, Colour2
-                store.getActiveDevice().fader_status[fader.id].channel = fader.channel;
             }
         }
     } catch (error) {
