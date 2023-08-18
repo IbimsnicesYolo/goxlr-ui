@@ -185,27 +185,25 @@ export const store = reactive({
 
 var active_bank = store.activeBank;
 var banks = {
-  ["A"]: [
-    { id: "A", channel: "Game", light: {"style":"TwoColour","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text": null,"inverted":true}}},
-    { id: "B", channel: "Mic", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}},
-    { id: "C", channel: "LineIn", light: {"style":"Gradient","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}},
-    { id: "D", channel: "System", light: {"style":"Meter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}}
-  ],
-  ["B"]: [
-    { id: "A", channel: "Console", light: {"style":"TwoColour","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text": null,"inverted":true}}},
-    { id: "B", channel: "Mic", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}},
-    { id: "C", channel: "LineOut", light: {"style":"Gradient","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}},
-    { id: "D", channel: "Music", light: {"style":"Meter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}}
-  ],
-  ["C"]: [
-        { id: "A", channel: "Console", light: {"style":"TwoColour","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text": null,"inverted":true}}},
-        { id: "B", channel: "Mic", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}},
-        { id: "C", channel: "LineOut", light: {"style":"Gradient","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}},
-        { id: "D", channel: "Music", light: {"style":"Meter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"DimmedColour2","coloursM":{"colour_one":"00FFFF","colour_two":"FFFFFF"}, "scribble":{"colour_one":"FF2331", "file_name":"scale.png","bottom_text":"System","left_text":"4","inverted":false}}}
-      ],
+    ["A"]: [
+        { id: "A", channel: "Mic", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"Colour2","coloursM":{"colour_one":"FF1F04","colour_two":"3AFF1B"}, "scribble":{"colour_one":"63E4FF", "file_name":"mic.png","bottom_text":"Mic","left_text": null,"inverted":true}}},
+        { id: "B", channel: "Chat", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"Colour2","coloursM":{"colour_one":"FF1F04","colour_two":"3AFF1B"}, "scribble":{"colour_one":"4FF1FF", "file_name":"person.png","bottom_text":"Discord","left_text": null,"inverted":true}}},
+        { id: "C", channel: "Music", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"Colour2","coloursM":{"colour_one":"FF1F04","colour_two":"3AFF1B"}, "scribble":{"colour_one":"51FF13", "file_name":"music.png","bottom_text":"Music","left_text": null,"inverted":true}}},
+        { id: "D", channel: "Game", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"Colour2","coloursM":{"colour_one":"FF1F04","colour_two":"3AFF1B"}, "scribble":{"colour_one":"FFBB1E", "file_name":"level.png","bottom_text":"Game","left_text": null,"inverted": true}}}
+    ],
+    ["B"]: [
+        { id: "A", channel: "LineIn", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"Colour2","coloursM":{"colour_one":"FF1F04","colour_two":"3AFF1B"}, "scribble":{"colour_one":"FFC30C", "file_name":"person.png","bottom_text":"LineIn","left_text": null,"inverted":true}}},
+        { id: "B", channel: "Music", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"Colour2","coloursM":{"colour_one":"FF1F04","colour_two":"3AFF1B"}, "scribble":{"colour_one":"51FF13", "file_name":"music.png","bottom_text":"Music","left_text":null,"inverted":true}}},
+        { id: "C", channel: "LineOut", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"Colour2","coloursM":{"colour_one":"FF1F04","colour_two":"3AFF1B"}, "scribble":{"colour_one":"45FF17", "file_name":"level.png","bottom_text":"Anlage","left_text":null,"inverted":true}}},
+        { id: "D", channel: "Headphones", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"Colour2","coloursM":{"colour_one":"FF1F04","colour_two":"3AFF1B"}, "scribble":{"colour_one":"FF2331", "file_name":"headphone.png","bottom_text":"Headphone","left_text":null,"inverted":true}}}
+    ],
+    ["C"]: [
+        { id: "A", channel: "Console", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"Colour2","coloursM":{"colour_one":"FF1F04","colour_two":"3AFF1B"}, "scribble":{"colour_one":"1E00FF", "file_name":"scale.png","bottom_text":"Console","left_text": null,"inverted":true}}},
+        { id: "B", channel: "Sample", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"Colour2","coloursM":{"colour_one":"FF1F04","colour_two":"3AFF1B"}, "scribble":{"colour_one":"FF00D1", "file_name":"lightbulb2.png","bottom_text":"Sample","left_text":null,"inverted":true}}},
+        { id: "C", channel: "LineIn", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"Colour2","coloursM":{"colour_one":"FF1F04","colour_two":"3AFF1B"}, "scribble":{"colour_one":"FFC30C", "file_name":"person.png","bottom_text":"LineIn","left_text":null,"inverted":true}}},
+        { id: "D", channel: "System", light: {"style":"GradientMeter","colours":{"colour_one":"FF000D","colour_two":"1AFF67"}, "off_style":"Colour2","coloursM":{"colour_one":"FF1F04","colour_two":"3AFF1B"}, "scribble":{"colour_one":"FFFCEF", "file_name":"scale.png","bottom_text":"System","left_text":null,"inverted":true}}}
+    ],
 };
-
-
 
 watch(store, async () => {
     try {
@@ -215,20 +213,20 @@ watch(store, async () => {
             active_bank = b;
 
             for (let i = 0; i < banks[active_bank].length; i++) {
-                await new Promise(r => setTimeout(r, 100));
+                await new Promise(r => setTimeout(r, 1));
                 let fader = banks[active_bank][i];
                 websocket.send_command(store.getActiveSerial(), {"SetFader": [fader.id, fader.channel]});
 
                 let l = banks[active_bank][i].light;
-                websocket.send_command(store.getActiveSerial(), {"SetScribbleText": [fader.id, l["scribble"]["bottom_text"]]}); // ""
-                websocket.send_command(store.getActiveSerial(), {"SetScribbleNumber": [fader.id, l["scribble"]["left_text"]]}); // null or "1"
+                websocket.send_command(store.getActiveSerial(), {"SetFaderDisplayStyle": [fader.id, l["style"]]}); // Meter, Gradient, GradientMeter, TwoColour
+                websocket.send_command(store.getActiveSerial(), {"SetSimpleColour": [ScribbleNames[fader.id], l["scribble"]["colour_one"]]});
                 websocket.send_command(store.getActiveSerial(), {"SetScribbleInvert": [fader.id, l["scribble"]["inverted"]]}); // bool
                 websocket.send_command(store.getActiveSerial(), {"SetScribbleIcon": [fader.id, l["scribble"]["file_name"]]}); // icon name
-                websocket.send_command(store.getActiveSerial(), {"SetSimpleColour": [ScribbleNames[fader.id], l["scribble"]["colour_one"]]});
-                websocket.send_command(store.getActiveSerial(), {"SetFaderDisplayStyle": [fader.id, l["style"]]}); // Meter, Gradient, GradientMeter, TwoColour
+                websocket.send_command(store.getActiveSerial(), {"SetScribbleText": [fader.id, l["scribble"]["bottom_text"]]}); // ""
+                websocket.send_command(store.getActiveSerial(), {"SetScribbleNumber": [fader.id, l["scribble"]["left_text"]]}); // null or ""
                 websocket.send_command(store.getActiveSerial(), {"SetFaderColours": [fader.id, l["colours"]["colour_one"], l["colours"]["colour_two"]]});
                 websocket.send_command(store.getActiveSerial(), {"SetButtonColours": [MuteButtonNamesForFader[fader.id], l["coloursM"]["colour_one"], l["coloursM"]["colour_two"]]});
-                websocket.send_command(store.getActiveSerial(), {"SetButtonOffStyle": [MuteButtonNamesForFader[fader.id], l["off_style"]]}); // DimmedColour2 , Dimmed, Colour2
+                websocket.send_command(store.getActiveSerial(), {"SetButtonOffStyle": [MuteButtonNamesForFader[fader.id], l["off_style"]]}); // Colour2 , Dimmed, Colour2
             }
         }
     } catch (error) {
