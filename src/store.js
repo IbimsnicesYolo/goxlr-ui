@@ -213,7 +213,6 @@ watch(store, async () => {
             active_bank = b;
 
             for (let i = 0; i < banks[active_bank].length; i++) {
-                await new Promise(r => setTimeout(r, 1));
                 let fader = banks[active_bank][i];
                 websocket.send_command(store.getActiveSerial(), {"SetFader": [fader.id, fader.channel]});
 
