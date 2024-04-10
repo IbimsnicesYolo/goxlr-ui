@@ -1,24 +1,27 @@
 <template>
   <!-- Lets just draw the table.. -->
   <CenteredContainer>
-    <GroupContainer title="Routing">
+    <GroupContainer :title="$t('message.routing.title')">
       <table>
         <thead>
         <tr>
           <th colspan="2" class="hidden"></th>
-          <th :colspan="inputs.length">Inputs</th>
+          <th :colspan="InputRouting().length">{{$t('message.routing.input')}}</th>
         </tr>
         <tr class="subHeader">
           <th colspan="2" class="hidden"></th>
-          <th v-for="input in inputs" :key="input">{{ input }}</th>
+          <th v-for="input in InputRouting()" :key="input">{{
+              $t(`message.routing.inputs["${input}"]`)
+            }}
+          </th>
         </tr>
         </thead>
-        <tr v-for="output in getOutputs()" :key="output">
-          <th v-if="output === 'Headphones'" class="rotated" :rowspan="outputs.length"><span>Outputs</span></th>
-          <SubmixButton :name="OutputDevice[output]" :display="output" v-if="submixEnabled()"/>
-          <th v-else>{{ output }}</th>
-          <Cell v-for="input in inputs" :key="input" :enabled="isEnabled(output, input)" :output="output" :input="input"
-                :orange="isDeviceMix(OutputDevice[output], 'B')" @clicked="handleClick"
+        <tr v-for="output in OutputRouting()" :key="output">
+          <th v-if="output === 'Headphones'" class="rotated" :rowspan="OutputRouting().length"><span>{{$t('message.routing.output')}}</span></th>
+          <SubmixButton :name="output" :display="getOutputString(output)" v-if="submixEnabled()"/>
+          <th v-else>{{ getOutputString(output) }}</th>
+          <Cell v-for="input in InputRouting()" :key="input" :enabled="isEnabled(output, input)" :output="output"
+                :input="input" :orange="isDeviceMix(output, 'B')" @clicked="handleClick"
                 :cell-disabled="!canRoute(output, input)"/>
         </tr>
       </table>
@@ -27,35 +30,37 @@
 </template>
 
 <script>
-import Cell from "@/components/sections/routing/Cell";
+import Cell from "@/components/sections/routing/Cell.vue";
 import {store} from "@/store";
-import {InputDevice, OutputDevice} from "@/util/mixerMapping";
+import {InputRouting, OutputRouting} from "@/util/mixerMapping";
 import {websocket} from "@/util/sockets";
 import CenteredContainer from "@/components/containers/CenteredContainer.vue";
 import GroupContainer from "@/components/containers/GroupContainer.vue";
 import SubmixButton from "@/components/sections/routing/SubmixButton.vue";
+import {isDeviceMini, versionNewerOrEqualTo} from "@/util/util";
 
 export default {
   name: "RoutingTable",
-  computed: {
-    OutputDevice() {
-      return OutputDevice
-    }
-  },
   components: {SubmixButton, GroupContainer, CenteredContainer, Cell},
 
   data() {
-    return {
-      inputs: Object.keys(InputDevice),
-      outputs: Object.keys(OutputDevice),
-    }
+    return {}
   },
 
   methods: {
-    getOutputs: function () {
-      return Object.keys(OutputDevice);
+    InputRouting() {
+      return InputRouting
+    },
+    OutputRouting() {
+      return OutputRouting
     },
 
+    getOutputString(name) {
+      if (name === "Sampler") {
+        return this.$t(this.getLanguageKeyForSampler());
+      }
+      return this.$t(`message.routing.outputs['${name}']`)
+    },
 
     handleClick: function (output, input) {
       if (!this.canRoute(output, input)) {
@@ -64,26 +69,21 @@ export default {
 
       let new_state = !this.isEnabled(output, input);
 
-      let inputDevice = InputDevice[input];
-      let outputDevice = OutputDevice[output];
-
       // eslint-disable-next-line no-unused-vars
       let command = {
-        "SetRouter": [inputDevice, outputDevice, new_state]
+        "SetRouter": [input, output, new_state]
       };
 
       websocket.send_command(store.getActiveSerial(), command);
     },
 
     canRoute(output, input) {
-      input = InputDevice[input];
-      output = OutputDevice[output];
       return !(output === "ChatMic" && input === "Chat");
     },
 
     // eslint-disable-next-line no-unused-vars
     isEnabled: function (output, input) {
-      return store.getActiveDevice().router[InputDevice[input]][OutputDevice[output]];
+      return store.getActiveDevice().router[input][output];
     },
 
     submixEnabled() {
@@ -106,6 +106,20 @@ export default {
     },
     getOutputMix(name) {
       return store.getActiveDevice().levels.submix.outputs[name];
+    },
+
+    getLanguageKeyForSampler() {
+      let sample = "message.routing.outputs.Sampler";
+      let vod = "message.routing.outputs.VOD";
+
+      if (store.hasActiveDevice()) {
+        if (isDeviceMini() && store.getConfig().driver_interface.interface === "TUSB") {
+          if (versionNewerOrEqualTo(store.getConfig().driver_interface.version, [5,30,0])) {
+            return vod;
+          }
+        }
+      }
+      return sample;
     },
   }
 }
@@ -131,7 +145,7 @@ thead th:not(.subHeader) {
 
 thead .subHeader th {
   background-color: #353937;
-  width: 70px;
+  min-width: 70px;
 }
 
 tr th {

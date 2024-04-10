@@ -1,7 +1,10 @@
 <template>
-    <GroupContainer title="Cough Button Settings">
-      <RadioSelection title="Button Behaviour" :options="button_behaviour" group="cough_button_behaviour" @selection-changed="behaviorPressed" :selected="getCough()" />
-      <RadioSelection title="Mute Behaviour" :options="mute_behaviour" group="cough_mute_behaviour" @selection-changed="setActiveMuteFunction" :selected="getActiveMute()" />
+    <GroupContainer :title="$t('message.configuration.cough.title')">
+      <RadioSelection :title="$t('message.configuration.cough.behaviourTitle')" :options="getButtonBehaviours()"
+                      group="cough_button_behaviour" @selection-changed="behaviorPressed" :selected="getCough()" />
+      <RadioSelection :title="$t('message.configuration.muteBehaviourTitle')" :options="getMuteBehaviours()"
+                      group="cough_mute_behaviour" @selection-changed="setActiveMuteFunction"
+                      :selected="getActiveMute()" />
     </GroupContainer>
 </template>
 
@@ -17,22 +20,27 @@ export default {
 
   data() {
     return {
-      button_behaviour: [
-        {id: "hold", label: "Hold"},
-        {id: "toggle", label: "Toggle"}
-      ],
-
-      mute_behaviour: [
-        {id: "All", label: "Mute All"},
-        {id: "ToStream", label: "Mute to Stream"},
-        {id: "ToVoiceChat", label: "Mute to Voice Chat"},
-        {id: "ToPhones", label: "Mute to Phones"},
-        {id: "ToLineOut", label: "Mute to Line Out"},
-      ]
     }
   },
 
   methods: {
+    getButtonBehaviours() {
+      return [
+        {id: "hold", label: this.$t('message.configuration.cough.behaviour.hold') },
+        {id: "toggle", label: this.$t('message.configuration.cough.behaviour.toggle') }
+      ];
+    },
+
+    getMuteBehaviours() {
+      return [
+        { id: "All", label: this.$t('message.configuration.mute_behaviour.all') },
+        { id: "ToStream", label: this.$t('message.configuration.mute_behaviour.stream') },
+        { id: "ToVoiceChat", label: this.$t('message.configuration.mute_behaviour.chatMic') },
+        { id: "ToPhones", label: this.$t('message.configuration.mute_behaviour.headphones') },
+        { id: "ToLineOut", label: this.$t('message.configuration.mute_behaviour.lineOut') },
+      ];
+    },
+
     getCough() {
       return (store.getActiveDevice().cough_button.is_toggle) ? "toggle" : "hold";
     },

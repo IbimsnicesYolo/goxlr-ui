@@ -16,7 +16,7 @@
         </div>
         <div v-if="show_footer" class="modal-footer">
           <slot name="footer">
-            <button ref="ok" class="modal-default-button" @click="closeModal()">OK</button>
+            <button ref="ok" class="modal-default-button" @click="closeModal()">{{ $t('message.modalButtons.ok') }}</button>
           </slot>
         </div>
       </div>
@@ -126,7 +126,8 @@ export default {
 .modal-container {
   border: 1px solid #000;
 
-  width: v-bind(width);
+  min-width: v-bind(width);
+  max-width: min-content;
   margin: 0 auto;
   background-color: #fff;
   border-radius: 2px;

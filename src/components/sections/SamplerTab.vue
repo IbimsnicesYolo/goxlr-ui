@@ -1,55 +1,62 @@
 <template>
-  <GroupContainer title="Bank">
+  <GroupContainer :title="$t('message.sampler.bankTitle')">
     <RadioSelection
-        title="Bank"
+        :title="$t('message.sampler.banks.bankTitle')"
         group="sampler_bank"
-        :options="bank_options"
+        :options="getBankOptions()"
         :selected="activeBank"
         @selection-changed="setActiveBank"
     />
     <RadioSelection
-        title="Button"
+        :title="$t('message.sampler.banks.buttonTitle')"
         group="sampler_button"
-        :options="button_options"
+        :options="getButtonOptions()"
         :selected="activeButton"
         @selection-changed="setActiveButton"
-        :label="'Button for bank ' + activeBank"
+        :label="$t('message.sampler.banks.buttonLabel', {activeBank: activeBank})"
     />
     <RadioSelection
-        title="Function"
+        :title="$t('message.sampler.banks.functionTitle')"
         group="sampler_function"
-        :options="function_options"
+        :options="getFunctionOptions()"
         :selected="getActiveFunction()"
         @selection-changed="setActiveFunction"
-        :label="`Function for ${activeButton} button in bank ${activeBank}`"
+        :label="$t('message.sampler.banks.functionLabel', {activeButton: activeButton, activeBank: activeBank})"
     />
     <RadioSelection
-        title="Play Order"
+        :title="$t('message.sampler.banks.playOrderTitle')"
         group="sampler_order"
-        :options="order_options"
+        :options="getOrderOptions()"
         :selected="getActiveOrder()"
         @selection-changed="setActiveOrder"
-        :label="`Play Order for ${activeButton} button in bank ${activeBank}`"
+        :label="$t('message.sampler.banks.playOrderLabel', {activeButton: activeButton, activeBank: activeBank})"
     />
   </GroupContainer>
-  <GroupContainer title="Sampler">
+  <GroupContainer :title="$t('message.sampler.samplesTitle')">
     <RadioSelection
-        title="Samples"
+        :title="$t('message.sampler.samples.samplesTitle')"
         group="sampler_samples"
+        max-width="200px"
         :options="getSampleOptions()"
         :selected="activeSample"
         @selection-changed="setActiveSample"
-        :label="`Sample for ${activeButton} button in bank ${activeBank}`"
+        :label="$t('message.sampler.samples.samplesLabel', { activeButton: activeButton, activeBank: activeBank })"
     >
       <ButtonItem
           id="add_sample"
           ref="add_sample_button"
-          label="Add Sample"
-          text="+"
+          :label="$t('message.sampler.samples.addSampleLabel')"
+          :text="$t('message.sampler.samples.addSample')"
           :centered="true"
           @click="this.$refs.add_sample_modal.openModal($refs.sample_selector, $refs.add_sample_button);"
-      >+</ButtonItem>
+      >+
+      </ButtonItem>
     </RadioSelection>
+    <Slider :title="$t('message.sampler.samples.gain')" :id=0 :slider-min-value=0 :slider-max-value=200
+            :text-suffix="$t('message.suffixes.percentage')" :slider-value=getSampleVolume() @value-changed="setVolume"
+            :store-path="getStorePath()" :disabled="isVolumeDisabled()" @blur="commitValue"
+    />
+
 
     <AudioVisualiser
         :active-bank="activeBank"
@@ -71,7 +78,7 @@
       <button
           class="openButton"
           @click="openSamples"
-          aria-label="Open Samples Directory"
+          :aria-label="$t('message.sampler.samples.accessibilityOpenSamplesDirectory')"
       >
         <font-awesome-icon icon="fa-solid fa-folder"/>
       </button>
@@ -98,7 +105,7 @@
               class="modal-default-button"
               :enabled="hasSelectedSample()"
               @click="addSample"
-          >Add
+          >{{$t('message.sampler.samples.sampleSelector.addButton')}}
           </ModalButton>
         </div>
       </div>
@@ -112,10 +119,10 @@
       :show_close="false"
       :prevent_esc="true"
   >
-    <template v-slot:title>Please wait, analysing sample.</template>
+    <template v-slot:title>{{$t('message.sampler.samples.addSampleWaitTitle')}}</template>
     <div tabindex="0">
-      Please wait while the sample is being analysed.<br/>
-      Progress: {{ sampleProgress }}%
+      {{$t('message.sampler.samples.addSampleAnalysing')}}<br/>
+      {{$t('message.sampler.samples.addSampleProgress', {progress: sampleProgress})}}
     </div>
   </AccessibleModal>
 
@@ -127,9 +134,9 @@
       :prevent_esc="false"
       @modal-close="clearErrors()"
   >
-    <template v-slot:title>Error adding Sample</template>
+    <template v-slot:title>{{$t('message.sampler.samples.errorTitle')}}</template>
     <div tabindex="0">
-      An error occurred while adding the sample to the bank:<br/><br/>
+      {{$t('message.sampler.samples.errorText')}}<br/><br/>
       {{ error }}
     </div>
   </AccessibleModal>
@@ -137,7 +144,7 @@
 
 <script>
 import {store} from "@/store";
-import AudioVisualiser from "@/components/sections/sampler/AudioVisualiser";
+import AudioVisualiser from "@/components/sections/sampler/AudioVisualiser.vue";
 import RadioSelection from "@/components/lists/RadioSelection.vue";
 import GroupContainer from "@/components/containers/GroupContainer.vue";
 import ButtonItem from "@/components/lists/ButtonItem.vue";
@@ -145,10 +152,14 @@ import AccessibleModal from "@/components/design/modal/AccessibleModal.vue";
 import ModalButton from "@/components/design/modal/ModalButton.vue";
 import {websocket} from "@/util/sockets";
 import SampleFileSelector from "@/components/sections/sampler/SampleFileSelector.vue";
+import Slider from "@/components/slider/Slider.vue";
 
 export default {
+  emits: ["on-sample-bank-change"],
+
   name: "SamplerTab",
   components: {
+    Slider,
     SampleFileSelector,
 
     ModalButton,
@@ -169,37 +180,45 @@ export default {
 
       showAddModal: false,
       waitModal: false,
-
-      bank_options: [
-        {id: "A", label: "A"},
-        {id: "B", label: "B"},
-        {id: "C", label: "C"},
-      ],
-
-      button_options: [
-        {id: "TopLeft", label: "Top Left"},
-        {id: "TopRight", label: "Top Right"},
-        {id: "BottomLeft", label: "Bottom Left"},
-        {id: "BottomRight", label: "Bottom Right"},
-      ],
-
-      function_options: [
-        {id: "PlayNext", label: "Play-Next"},
-        {id: "PlayStop", label: "Play-Stop"},
-        {id: "PlayFade", label: "Play-Fade"},
-        {id: "StopOnRelease", label: "Stop on Release"},
-        {id: "FadeOnRelease", label: "Fade on Release"},
-        {id: "Loop", label: "Loop"},
-      ],
-
-      order_options: [
-        {id: "Sequential", label: "Sequential"},
-        {id: "Random", label: "Random"},
-      ],
     };
   },
 
   methods: {
+    getBankOptions() {
+      return [
+        {id: "A", label: this.$t('message.sampler.banks.bank.a')},
+        {id: "B", label: this.$t('message.sampler.banks.bank.b')},
+        {id: "C", label: this.$t('message.sampler.banks.bank.c')},
+      ];
+    },
+
+    getButtonOptions() {
+      return [
+        {id: "TopLeft", label: this.$t('message.sampler.banks.buttons.topLeft')},
+        {id: "TopRight", label: this.$t('message.sampler.banks.buttons.topRight')},
+        {id: "BottomLeft", label: this.$t('message.sampler.banks.buttons.bottomLeft')},
+        {id: "BottomRight", label: this.$t('message.sampler.banks.buttons.bottomRight')},
+      ];
+    },
+
+    getFunctionOptions() {
+      return [
+        {id: "PlayNext", label: this.$t('message.sampler.banks.functions.playNext')},
+        {id: "PlayStop", label: this.$t('message.sampler.banks.functions.playStop')},
+        {id: "PlayFade", label: this.$t('message.sampler.banks.functions.playFade')},
+        {id: "StopOnRelease", label: this.$t('message.sampler.banks.functions.stopOnRelease')},
+        {id: "FadeOnRelease", label: this.$t('message.sampler.banks.functions.fadeOnRelease')},
+        {id: "Loop", label: this.$t('message.sampler.banks.functions.loop')},
+      ];
+    },
+
+    getOrderOptions() {
+      return [
+        {id: "Sequential", label: this.$t('message.sampler.banks.playOrders.sequential')},
+        {id: "Random", label: this.$t('message.sampler.banks.playOrders.random')},
+      ];
+    },
+
     openSamples() {
       websocket.open_path("Samples");
     },
@@ -215,6 +234,8 @@ export default {
     setActiveBank(bank) {
       this.activeBank = bank;
       this.activeSample = "-1";
+
+      this.$emit("on-sample-bank-change", bank);
     },
 
     setActiveButton(button) {
@@ -284,6 +305,12 @@ export default {
       if (id === "-1") {
         return "";
       }
+
+      // If a sample button is cleared, the active sample disappears, we need to return nothing..
+      if (store.getActiveDevice().sampler.banks[this.activeBank][this.activeButton].samples[id] === undefined) {
+        return "";
+      }
+
       return store.getActiveDevice().sampler.banks[this.activeBank][
           this.activeButton
           ].samples[id].name;
@@ -320,6 +347,50 @@ export default {
         });
       }
     },
+
+    getSampleVolume() {
+      if (this.activeSample !== "-1") {
+        let sample_name = this.getActiveSampleName(this.activeSample);
+
+        // eslint-disable-next-line no-unused-vars
+        for (let [key, sample] of Object.entries(store.getSampleFiles())) {
+          if (sample.name === sample_name) {
+            return sample.gain_pct;
+          }
+        }
+      }
+      // Not found, or not selected, either way, hit the default.
+      return 100;
+    },
+
+    setVolume(id, volume) {
+      // Get the Selected Sample Name..
+      let sample_name = this.getActiveSampleName(this.activeSample);
+
+      websocket.send_daemon_command({
+        "SetSampleGainPct": [sample_name, volume]
+      })
+    },
+    getStorePath() {
+      return "";
+    },
+    commitValue() {
+      websocket.send_daemon_command("ApplySampleChange");
+    },
+
+    isVolumeDisabled() {
+      if (this.activeSample === '-1') {
+        return true;
+      }
+
+      if (store.getActiveDevice().sampler.banks[this.activeBank][
+          this.activeButton
+          ].is_playing) {
+        return true;
+      }
+      return false;
+
+    },
   },
 
   computed: {
@@ -354,7 +425,7 @@ export default {
         this.$refs.add_sample_wait.openModal(undefined, this.$refs.add_sample_button);
         store.setAccessibilityNotification(
             "polite",
-            "Please wait, analysing sample. This process may take a couple of minutes."
+            this.$t('message.sampler.samples.accessibilityAnalysing')
         );
       }
 
@@ -363,7 +434,7 @@ export default {
         this.$refs.add_sample_wait.openModal(undefined, this.$refs.add_sample_button);
         store.setAccessibilityNotification(
             "polite",
-            "Please wait, analysing sample. This process may take a couple of minutes."
+            this.$t('message.sampler.samples.accessibilityAnalysing')
         );
       }
 
@@ -373,7 +444,11 @@ export default {
 
         store.setAccessibilityNotification(
             "polite",
-            `Sample ${name} added to ${this.activeButton} button in bank ${this.activeBank}.`
+            this.$t('message.sampler.accessibilityAdded', {
+              name: name,
+              activeButton: this.activeButton,
+              activeBank: this.activeBank
+            })
         );
       }
     },
