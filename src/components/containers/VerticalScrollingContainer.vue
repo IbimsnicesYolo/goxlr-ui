@@ -3,7 +3,6 @@ export default {
   name: "VerticalScrollingContainer",
   props: {
     maxHeight: { type: String, optional: true, default: "inherit" },
-    padding: { type: String, required: false, default: "4px" }
   },
 
   methods: {

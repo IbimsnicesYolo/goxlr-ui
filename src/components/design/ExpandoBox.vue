@@ -1,7 +1,7 @@
 <template>
   <button class="expander" @click="handleClick">
-    <font-awesome-icon v-if=expanded title="Collapse Section" :icon="'fa-solid ' + expand_left" />
-    <font-awesome-icon v-else title="Expand Section" :icon="'fa-solid ' + expand_right" />
+    <font-awesome-icon v-if=expanded title="Collapse Section" icon="fa-solid fa-chevron-left" />
+    <font-awesome-icon v-else title="Expand Section" icon="fa-solid fa-chevron-right" />
   </button>
 </template>
 
@@ -12,8 +12,6 @@ export default {
   components: {FontAwesomeIcon},
   props: {
     expanded: {type: Boolean, default: false },
-    expand_right: { type: String, required: false, default: 'fa-chevron-right'},
-    expand_left: { type: String, required: false, default: 'fa-chevron-left'}
   },
 
   methods: {
@@ -32,19 +30,18 @@ export default {
 
 <style scoped>
 .expander {
-  display:inline-flex;
-  align-items: center;
-
+  flex-direction: column;
+  flex-wrap: nowrap;
   color: #fff;
   vertical-align: middle;
   background-color: #3b413f;
   padding: 15px;
 
   border: 0;
+  margin: 0;
 }
 
 .expander:hover {
   background-color: #49514e;
 }
 </style>
-

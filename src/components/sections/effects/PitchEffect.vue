@@ -1,19 +1,14 @@
 <template>
-  <ExpandoGroupContainer :title="$t('message.effects.pitch.title')" @expando-clicked="is_expanded = !is_expanded"
-                         :expanded="is_expanded">
-    <RadioSelection :title="$t('message.effects.pitch.style')" group="effects_pitch_style" :options="getPitchStyles()"
-                    :selected="getActiveStyle()" @selection-changed="stylePressed"/>
+  <ExpandoGroupContainer title="Pitch" @expando-clicked="is_expanded = !is_expanded" :expanded="is_expanded">
+    <RadioSelection title="Style" group="effects_pitch_style" :options="pitch_style" :selected="getActiveStyle()" @selection-changed="stylePressed"/>
 
-    <SliderInput :title="$t('message.effects.pitch.amount')" :value-map="getValueMap()" :slider-value="getAmountValue()"
-                 :store-path="getStorePath('amount')" @value-changed="setAmountValue"/>
-    <SliderInput :title="$t('message.effects.pitch.character')" :slider-min-value=0 :slider-max-value=100
-                 text-suffix="%" :slider-value="getCharacterValue()" :store-path="getStorePath('character')"
-                 v-show="is_expanded" @value-changed="setCharacterValue"/>
+    <SliderInput title="Amount" :value-map="getValueMap()" :slider-value="getAmountValue()" :store-path="getStorePath('amount')" @value-changed="setAmountValue" />
+    <SliderInput title="Character" :slider-min-value=0 :slider-max-value=100 text-suffix="%" :slider-value="getCharacterValue()" :store-path="getStorePath('character')" v-show="is_expanded" @value-changed="setCharacterValue" />
   </ExpandoGroupContainer>
 </template>
 
 <script>
-import SliderInput from "@/components/slider/Slider.vue";
+import SliderInput from "@/components/slider/Slider";
 import {store} from "@/store";
 import {websocket} from "@/util/sockets";
 import RadioSelection from "@/components/lists/RadioSelection.vue";
@@ -25,17 +20,15 @@ export default {
   data() {
     return {
       is_expanded: false,
+
+      pitch_style: [
+        {id: "Narrow", label: "Narrow"},
+        {id: "Wide", label: "Wide"},
+      ],
     }
   },
 
   methods: {
-    getPitchStyles() {
-      return [
-        {id: "Narrow", label: this.$t('message.effects.pitch.styles.narrow')},
-        {id: "Wide", label: this.$t('message.effects.pitch.styles.wide')},
-      ];
-    },
-
     getActiveStyle() {
       return store.getActiveDevice().effects.current.pitch.style;
     },
@@ -68,11 +61,11 @@ export default {
       let pitch_style = store.getActiveDevice().effects.current.pitch.style;
       let base_value = store.getActiveDevice().effects.current.pitch.amount;
       if (hardtune_enabled) {
-        if (pitch_style === "Narrow") {
-          return base_value + 1;
-        } else {
-          return base_value + 2;
-        }
+         if (pitch_style === "Narrow") {
+           return base_value + 1;
+         } else {
+           return base_value + 2;
+         }
       }
       if (pitch_style === "Narrow") {
         return (base_value / 2) + 12;

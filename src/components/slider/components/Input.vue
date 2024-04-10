@@ -9,7 +9,7 @@
       <input type="number" v-on:input="update" v-on:focus="focus" v-on:blur="reset" v-model="localTextValue"
              :min="minValue"
              :max="maxValue" :aria-label="title" :aria-description="title"
-             :aria-valuetext="getDisplayValue()" :disabled="disabled"/>
+             :aria-valuetext="getDisplayValue()"/>
       <div class="suffix"><span class="filler">{{ displayValue() }}</span><span v-html="getSuffix()"></span></div>
     </div>
   </div>
@@ -48,8 +48,6 @@ export default {
     colour: {type: String, required: false, default: '#59b1b6'},
     backgroundColour: {type: String, required: false, default: '#3b413f'},
     title: {type: String, required: false, default: ''},
-
-    disabled: {type: Boolean, required: false, default: false},
   },
 
   methods: {
@@ -118,7 +116,6 @@ export default {
       // Value has changed, emit something upwards..
       let value = (this.allowFloat) ? parseFloat(newValue) : parseInt(newValue);
       this.$emit("value-updated", value, this.id);
-      this.$emit("blur");
     },
 
     focus() {
@@ -144,8 +141,6 @@ export default {
         this.localTextValue = this.maxValue;
         this.$emit("value-updated", this.maxValue, this.id);
       }
-
-      this.$emit("blur");
     },
 
     isNumber(str) {

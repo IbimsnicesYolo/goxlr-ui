@@ -25,6 +25,17 @@ export default {
 
   data() {
     return {
+      options: [
+        {
+          id: 'Global',
+          label: 'Global',
+        },
+        {
+          id: 'Accent',
+          label: 'Accent'
+        }
+      ],
+
       selected: 'Global',
       mod1Value: 0,
       mod2Value: 0,
@@ -33,44 +44,27 @@ export default {
   },
 
   methods: {
-    getNodes() {
-      return [];
-    },
-
-    getAreaOptions() {
-      return [
-        {
-          id: 'Global',
-          label: this.$t('message.lighting.global.areas.areas.global'),
-        },
-        {
-          id: 'Accent',
-          label: this.$t('message.lighting.global.areas.areas.accent')
-        }
-      ];
-    },
-
     getAnimationOptions() {
       let animations = [
         {
           id: 'None',
-          label: this.$t("message.lighting.global.animations.modes.none"),
+          label: 'None',
         },
         {
           id: 'RetroRainbow',
-          label: this.$t("message.lighting.global.animations.modes.rainbowRetro")
+          label: 'Rainbow Retro'
         },
         {
           id: 'RainbowBright',
-          label: this.$t("message.lighting.global.animations.modes.rainbowBright")
+          label: 'Rainbow Bright'
         },
         {
           id: 'RainbowDark',
-          label: this.$t("message.lighting.global.animations.modes.rainbowDark")
+          label: 'Rainbow Dark'
         },
         {
           id: 'Simple',
-          label: this.$t("message.lighting.global.animations.modes.simple")
+          label: 'Simple'
         },
       ];
 
@@ -78,7 +72,7 @@ export default {
       if (!isDeviceMini()) {
         animations.push({
           id: 'Ripple',
-          label: this.$t("message.lighting.global.animations.modes.ripple")
+          label: 'Ripple'
         });
       }
       return animations;
@@ -216,21 +210,17 @@ export default {
 <template>
   <CenteredContainer>
     <ContentContainer style="padding-top: 15px; padding-bottom: 20px">
-      <GroupContainer :title="$t('message.lighting.global.areas.title')">
-        <RadioSelection :title="$t('message.lighting.global.areas.area')" group="lighting_global_areas" :options="getAreaOptions()" :selected="this.selected"
+      <GroupContainer title="Areas">
+        <RadioSelection title="Area" group="lighting_global_areas" :options="this.options" :selected="this.selected"
                         @selection-changed="onSelectionChange"/>
-        <ColourPicker :title="$t('message.lighting.common.colour')" :color-value="color()"
-                      @colour-changed="onColourChange"/>
+        <ColourPicker title="Colour" :color-value="color()" @colour-changed="onColourChange"/>
       </GroupContainer>
-      <GroupContainer v-if="animationSupported()" :title="$t('message.lighting.global.animations.title')">
-        <RadioSelection :title="$t('message.lighting.global.animations.mode')" group="lighting_animation"
-                        :options="getAnimationOptions()" :selected="this.animationModeSelected()"
-                        @selection-changed="onAnimationModeChange"/>
+      <GroupContainer v-if="animationSupported()" title="Animations">
+        <RadioSelection title="Animation Mode" group="lighting_animation" :options="getAnimationOptions()"
+                        :selected="this.animationModeSelected()" @selection-changed="onAnimationModeChange"/>
 
         <div style="text-align: center; color: #fff; padding-left: 8px">
-          <div class="title" :class="{ disabled: !isMod1Enabled()}">
-            {{ $t('message.lighting.global.animations.mod1') }}
-          </div>
+          <div class="title" :class="{ disabled: !isMod1Enabled()}">GRADIENT MOD 1</div>
           <RangeSelector
               id="mod1"
               :store-path=getMod1StorePath()
@@ -244,9 +234,7 @@ export default {
           />
           <div class="modValue" :class="{ disabled: !isMod1Enabled()}">{{ getMod1Value() }}</div>
 
-          <div class="title" :class="{ disabled: !isMod2Enabled()}">
-            {{ $t('message.lighting.global.animations.mod2') }}
-          </div>
+          <div class="title" :class="{ disabled: !isMod2Enabled()}">GRADIENT MOD 2</div>
           <RangeSelector
               id="mod2"
               :store-path=getMod2StorePath()
@@ -260,9 +248,7 @@ export default {
           <div class="modValue" :class="{ disabled: !isMod2Enabled()}">{{ getMod2Value() }}</div>
 
           <div>
-            <div class="title" :class="{ disabled: !isWaterfallEnabled()}">
-              {{ $t('message.lighting.global.animations.waterfall') }}
-            </div>
+            <div class="title" :class="{ disabled: !isWaterfallEnabled()}">WATERFALL SETTINGS</div>
             <div class="waterfall" :class="{ active: isWaterFallActive('Up'), disabled: !isWaterfallEnabled() }"
                  @click="setWaterfall('Up')">
               <font-awesome-icon icon="fa-solid fa-up-long"/>
@@ -274,7 +260,7 @@ export default {
             <div class="wf-button" :class="{ disabled: !isWaterfallEnabled() }">
               <button :class="{ active: isWaterFallActive('Off') }" style="width: 100%" @click="setWaterfall('Off')"
                       :disabled="!isWaterfallEnabled()">
-                {{ $t('message.lighting.global.animations.waterfallOff') }}
+                Off
               </button>
             </div>
           </div>
@@ -288,7 +274,6 @@ export default {
 .title {
   margin-bottom: 10px;
   margin-top: 1px;
-  text-transform: uppercase;
 }
 
 .title.disabled {

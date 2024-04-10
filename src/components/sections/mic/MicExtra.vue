@@ -1,18 +1,12 @@
 <template>
-  <GroupContainer :title="$t('message.microphone.extras.title')">
-      <Slider v-if="!isDeviceMini()" :title="$t('message.microphone.extras.deEsser')" :slider-min-value=0
-              :slider-max-value=100 :text-suffix="$t('message.suffixes.percentage')"
-              :slider-value="getDeEssValue()" :store-path="getStorePath('deess')"
-              @value-changed="deEssValueChanged" />
-      <Slider :title="$t('message.microphone.extras.bleep')" :text-min-value=0 :text-max-value=100
-              :slider-min-value=-36 :slider-max-value=0 :text-suffix="$t('message.suffixes.percentage')"
-              :slider-value="getBleepValue()" :store-path="getStorePath('bleep')"
-              @value-changed="bleepValueChanged" />
+  <GroupContainer title="Extras">
+      <Slider v-if="!isDeviceMini()" title="De-Esser" :slider-min-value=0 :slider-max-value=100 text-suffix="%" :slider-value="getDeEssValue()" :store-path="getStorePath('deess')" @value-changed="deEssValueChanged" />
+      <Slider title="Bleep" :text-min-value=0 :text-max-value=100 :slider-min-value=-36 :slider-max-value=0 text-suffix="%" :slider-value="getBleepValue()" :store-path="getStorePath('bleep')" @value-changed="bleepValueChanged" />
   </GroupContainer>
 </template>
 
 <script>
-import Slider from "@/components/slider/Slider.vue";
+import Slider from "../../slider/Slider";
 import {store} from "@/store";
 import {websocket} from "@/util/sockets";
 import {isDeviceMini} from "@/util/util";
@@ -31,7 +25,6 @@ export default {
 
     deEssValueChanged(id, value) {
       websocket.send_command(store.getActiveSerial(), { "SetDeeser": value });
-      store.getActiveDevice().levels.deess = value;
     },
 
     getBleepValue() {
@@ -40,7 +33,6 @@ export default {
 
     bleepValueChanged(id, value) {
       websocket.send_command(store.getActiveSerial(), { "SetSwearButtonVolume": value });
-      store.getActiveDevice().levels.bleep = value;
     },
 
     getStorePath(name) {

@@ -1,7 +1,7 @@
 <template>
   <VerticalScrollingContainer :max-height="maxHeight" v-if="showSamples()">
     <div v-if="getDirectoryList().length > 0">
-      <p class="title screenreader-only" role="heading">{{$t('message.sampler.samples.sampleSelector.directories')}}</p>
+      <p class="title screenreader-only" role="heading">Directories</p>
       <div class="buttons">
         <ButtonItem v-for="(directory, index) in getDirectoryList()" v-bind:key="index" :id="directory.id"
                     text="" @on-click="selectDirectory" ref="button" :background="background">
@@ -12,7 +12,7 @@
     </div>
 
     <div v-if="getSampleList().length > 0">
-      <p class="title screenreader-only" role="heading">{{$t('message.sampler.samples.sampleSelector.samples')}}</p>
+      <p class="title screenreader-only" role="heading">Samples</p>
       <RadioList
           ref="sampleList"
           :padding="padding"
@@ -26,7 +26,8 @@
   </VerticalScrollingContainer>
 
   <span v-else>
-    {{ $t('message.sampler.samples.sampleSelector.noSamples') }}
+      There are currently no samples in the samples folder. Copy some over so
+      they can be selected here!
   </span>
 </template>
 
@@ -71,7 +72,7 @@ export default {
         samples.push({
           id: this.prefix + '*',
           icon: "turn-up",
-          label: this.$t('message.sampler.samples.sampleSelector.parentDirectory')
+          label: "Parent Directory"
         });
       }
 

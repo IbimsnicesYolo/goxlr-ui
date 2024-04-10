@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import GoXLR from "@/components/GoXLR.vue";
+import GoXLR from "@/components/GoXLR";
 
 export default {
   name: 'App',
@@ -42,9 +42,5 @@ body {
   color: #2c3e50;
   margin-top: 10px;
   user-select: none;
-}
-
-button {
-  font-family: LeagueMonoCondensed, sans-serif;
 }
 </style>

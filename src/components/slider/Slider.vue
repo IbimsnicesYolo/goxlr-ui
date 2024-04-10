@@ -1,18 +1,17 @@
 <template>
   <div class="sliderBox" role="group" :aria-label="title" @wheel="handleScroll">
-    <slot name="header"><Label v-bind:title="title" :text-colour="labelColour" role="heading" aria-level="3"/></slot>
+    <slot name="header"><Label v-bind:title="title" role="heading" aria-level="3"/></slot>
     <Range :current-field-value=fieldValue :min-value="getSliderMinValue()" :max-value="getSliderMaxValue()"
            :store-path="storePath" @value-updated="sliderValueUpdated" @mouse-down="setMouseDown"
            @mouse-up="setMouseUp" :background-colour="rangeBackgroundColour" :title="title"
            :reported-value="getTextValue()"
-           :height="rangeHeight" :transform="rangeTransform" :disabled="disabled" :colour="rangeColour"
+           :height="rangeHeight" :transform="rangeTransform"
     />
 
     <Input :current-text-value="textValue" :min-value="minimumTextValue" :max-value="maximumTextValue"
            :textSuffix="textSuffix" :value-map="valueMap" :current-field-value=fieldValue
            :editable="isEditable()" @value-updated="inputValueUpdated"
            style="margin-top: 15px" :background-colour="inputBackgroundColour" :title="title"
-           :disabled="disabled" @blur="$emit('blur')" :colour="textColour"
     />
   </div>
 </template>
@@ -26,9 +25,9 @@
  * definitions provided.
  */
 
-import Label from "./components/Label.vue";
-import Range from "./components/Range.vue";
-import Input from "./components/Input.vue";
+import Label from "./components/Label";
+import Range from "./components/Range";
+import Input from "./components/Input";
 
 export default {
   name: "SliderInput",
@@ -51,9 +50,6 @@ export default {
     backgroundColour: {type: String, required: false, default: "#353937"},
     inputBackgroundColour: {type: String, required: false, default: "#3b413f"},
     rangeBackgroundColour: {type: String, required: false, default: '#252927'},
-    rangeColour: { type: String, required: false, default: '#59b1b6' },
-    textColour: {type: String, required: false, default: '#59b1b6' },
-    labelColour: {type: String, required: false, default: '#fff'},
 
     title: {type: String, default: ""},
 
@@ -69,8 +65,6 @@ export default {
     rangeTransform: {type: Number, required: false},
 
     valueMap: Array,
-
-    disabled: { type: Boolean, required: false, default: false }
   },
 
   methods: {
@@ -223,7 +217,6 @@ export default {
 
       // Emit the latest value..
       this.$emit('value-changed', this.id, this.fieldValue, true);
-      this.$emit('blur');
     },
 
     handleScroll(e) {
@@ -282,8 +275,7 @@ export default {
 
 <style scoped>
 .sliderBox {
+  width: 90px;
   background-color: v-bind(backgroundColour);
-  min-width: 92px;
-  max-width: min-content;
 }
 </style>

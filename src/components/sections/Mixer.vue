@@ -2,25 +2,25 @@
   <CenteredContainer>
     <MixAssignment v-if="submixEnabled()"/>
 
-    <GroupContainer v-if="!submixEnabled()" :title="$t('message.mixer.inputs' )">
+    <GroupContainer v-if="!submixEnabled()" title="Inputs">
       <template v-if="isSubMixSupported()" #right>
-        <label for="submix_enabled">{{ $t('message.mixer.submix' )}}</label>
+        <label for="submix_enabled">Submixes</label>
         <input id="submix_enabled" type="checkbox" :checked="submixEnabled()" @change="setSubmixEnabled"/>
       </template>
-      <Slider v-for="item in inputMixer" :key=item :id=channelNames.indexOf(item) :title="getChannelName(item)"
-              :slider-min-value=0 :slider-max-value=255 :text-min-value=0 :text-max-value=100
-              :text-suffix="$t('message.suffixes.percentage')" :slider-value="getValue(item)"
+      <Slider v-for="item in inputMixer" :key=item :id=channelNames.indexOf(item) :title="channelNamesReadable[item]"
+              :slider-min-value=0
+              :slider-max-value=255 :text-min-value=0 :text-max-value=100 text-suffix="%" :slider-value="getValue(item)"
               :store-path="getStorePath(item)" @value-changed="valueChange"
       />
     </GroupContainer>
-    <GroupContainer v-else :title="$t('message.mixer.inputs')">
+    <GroupContainer v-else title="Inputs">
       <template v-if="isSubMixSupported()" #right>
-        <label for="submix_enabled">{{ $t('message.mixer.submix' )}}</label>
+        <label for="submix_enabled">Submixes</label>
         <input id="submix_enabled" type="checkbox" :checked="submixEnabled()" @change="setSubmixEnabled"/>
       </template>
       <SubmixSlider v-for="item in inputMixer" :key=item :id=channelNames.indexOf(item)
-                    :title="getChannelName(item)" :slider-min-value=0 :slider-max-value=255 :text-min-value=0
-                    :text-max-value=100 :text-suffix="$t('message.suffixes.percentage')"
+                    :title="channelNamesReadable[item]" :slider-min-value=0
+                    :slider-max-value=255 :text-min-value=0 :text-max-value=100 text-suffix="%"
                     :slider-a-value="getValue(item)" :slider-b-value="getSubmixValue(item)"
                     :submix-linked="isSubMixLinked(item)" :dimmed="isSubmixDimmed(item)"
                     :store-path="getSubmixPaths(item)" @value-changed="submixValueChange"
@@ -28,11 +28,10 @@
       />
     </GroupContainer>
 
-    <GroupContainer :title="$t('message.mixer.outputs')" @expando-clicked="isVisible = !isVisible"
-                    :expanded="isVisible">
+    <GroupContainer title="Outputs" @expando-clicked="isVisible = !isVisible" :expanded="isVisible">
       <Slider v-for="item in outputMixer" :key=item :id=channelNames.indexOf(item)
-              :title="getChannelName(item)" :slider-min-value=0 :slider-max-value=255 :text-min-value=0
-              :text-max-value=100 :text-suffix="$t('message.suffixes.percentage')" :slider-value="getValue(item)"
+              :title="channelNamesReadable[item]" :slider-min-value=0
+              :slider-max-value=255 :text-min-value=0 :text-max-value=100 text-suffix="%" :slider-value="getValue(item)"
               :store-path="getStorePath(item)" @value-changed="valueChange"
               v-show="!submixEnabled() || !submixHide.includes(item)"
       />
@@ -41,9 +40,10 @@
 </template>
 
 <script>
-import Slider from "../slider/Slider.vue";
+import Slider from "../slider/Slider";
 import {
   ChannelName,
+  ChannelNameReadable,
   channelNameToInputDevice,
   InputMixer,
   OutputDevice,
@@ -68,6 +68,7 @@ export default {
       submixHide: OutputMixerSubmixHidden,
       outputDevices: OutputDevice,
       channelNames: ChannelName,
+      channelNamesReadable: ChannelNameReadable,
 
       isVisible: false,
       volumes: [],
@@ -75,10 +76,6 @@ export default {
   },
 
   methods: {
-    getChannelName(channel) {
-      return this.$t(`message.channels.${channel}`);
-    },
-
     valueChange(id, volume) {
       let str_id = this.channelNames[id];
       let command = undefined;
@@ -158,6 +155,8 @@ export default {
     },
 
     isSubmixDimmed(name) {
+      console.log(name);
+
       // Get the Active Monitor...
       let monitor = store.getActiveDevice().levels.output_monitor;
       return !store.getActiveDevice().router[channelNameToInputDevice(name)][monitor];

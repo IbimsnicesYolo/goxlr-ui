@@ -1,16 +1,15 @@
 <script>
-import GroupContainer from "@/components/containers/GroupContainer.vue";
-import ContentContainer from "@/components/containers/ContentContainer.vue";
+import GroupContainer from "@/components/containers/GroupContainer";
+import ContentContainer from "@/components/containers/ContentContainer";
 import RadioSelection from "@/components/lists/RadioSelection.vue";
-import ColourPicker from "@/components/sections/lighting/elements/ColourPicker.vue";
-import CenteredContainer from "@/components/containers/CenteredContainer.vue";
+import ColourPicker from "@/components/sections/lighting/elements/ColourPicker";
 
 import {store} from "@/store";
 import {websocket} from "@/util/sockets";
-import {getLightingInactiveOptions, LightingInactiveOptions} from "@/util/mixerMapping";
+import {LightingInactiveOptions} from "@/util/mixerMapping";
+import CenteredContainer from "@/components/containers/CenteredContainer.vue";
 
 export default {
-  emits: ["nav-updated"],
   name: "LightingSampler",
   components: {
     CenteredContainer,
@@ -22,33 +21,26 @@ export default {
 
   data() {
     return {
+      buttonOptions: [
+        {
+          id: 'SamplerSelectA',
+          label: 'A'
+        },
+        {
+          id: 'SamplerSelectB',
+          label: 'B'
+        },
+        {
+          id: 'SamplerSelectC',
+          label: 'C'
+        }
+      ],
       selectedButtonOption: 'SamplerSelectA',
+      inactiveOptions: LightingInactiveOptions
     }
   },
 
   methods: {
-    getLightingInactiveOptions,
-    getButtonOptions() {
-      return [
-        {
-          id: 'SamplerSelectA',
-          label: this.$t('message.lighting.sampler.buttons.a')
-        },
-        {
-          id: 'SamplerSelectB',
-          label: this.$t('message.lighting.sampler.buttons.b')
-        },
-        {
-          id: 'SamplerSelectC',
-          label: this.$t('message.lighting.sampler.buttons.c')
-        }
-      ];
-    },
-
-    getNodes() {
-      return [this.selectedButtonOption];
-    },
-
     activeColor() {
       return "#" + store.getActiveDevice().lighting.sampler[this.selectedButtonOption].colours["colour_one"];
     },
@@ -67,7 +59,6 @@ export default {
 
     onButtonSelectionChange(id) {
       this.selectedButtonOption = id
-      this.$emit("nav-updated");
     },
 
     onInactiveSelectionChange(id) {
@@ -119,23 +110,18 @@ export default {
 <template>
   <CenteredContainer>
     <ContentContainer style="padding-top: 15px; ; padding-bottom: 20px">
-      <GroupContainer :title="$t('message.lighting.sampler.title')">
+      <GroupContainer title="Bank">
         <template #right>
-          <button class="applyToAll" @click="applyToAll()">{{ $t('message.lighting.common.applyToAll') }}</button>
+          <button class="applyToAll" @click="applyToAll()">Apply to All</button>
         </template>
-        <RadioSelection :title="$t('message.lighting.sampler.buttonsTitle')" group="lighting_sampler_buttons"
-                        :options="getButtonOptions()" :selected="this.selectedButtonOption"
-                        @selection-changed="onButtonSelectionChange"/>
-        <ColourPicker :title="$t('message.lighting.sampler.active')" :color-value="activeColor()"
-                      @colour-changed="onActiveColourChange"/>
-        <ColourPicker :title="$t('message.lighting.sampler.empty')" :color-value="emptyColor()"
-                      @colour-changed="onEmptyColourChange"/>
-        <RadioSelection :title="$t('message.lighting.sampler.inactive')"
-                        group="lighting_sampler_inactive_behaviour" :options="getLightingInactiveOptions($t)"
-                        :selected="this.selectedInactiveOption()"
+        <RadioSelection title="Buttons" group="lighting_sampler_buttons" :options="this.buttonOptions"
+                        :selected="this.selectedButtonOption" @selection-changed="onButtonSelectionChange"/>
+        <ColourPicker title="Active / Loaded" :color-value="activeColor()" @colour-changed="onActiveColourChange"/>
+        <ColourPicker title="Sample Empty" :color-value="emptyColor()" @colour-changed="onEmptyColourChange"/>
+        <RadioSelection title="Inactive Bank" group="lighting_sampler_inactive_behaviour"
+                        :options="this.inactiveOptions" :selected="this.selectedInactiveOption()"
                         @selection-changed="onInactiveSelectionChange"/>
-        <ColourPicker :title="$t('message.lighting.sampler.inactive')" :color-value="inactiveColor()"
-                      @colour-changed="onInactiveColourChange"/>
+        <ColourPicker title="Inactive Bank" :color-value="inactiveColor()" @colour-changed="onInactiveColourChange"/>
       </GroupContainer>
     </ContentContainer>
   </CenteredContainer>

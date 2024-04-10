@@ -5,9 +5,9 @@
     </div>
     <ContentContainer :no-left-pad="true">
       <ContentBox>
-        <MicSetupButton @mic-setup-open="mic_open" />
+        <MicSetupButton />
       </ContentBox>
-      <Gate ref="gate" />
+      <Gate/>
       <Equaliser/>
       <Compressor/>
       <MicExtra />
@@ -16,13 +16,13 @@
 </template>
 
 <script>
-import Gate from "./mic/Gate.vue";
-import Equaliser from "./mic/Equalizer.vue";
-import Compressor from "./mic/Compressor.vue";
-import MicExtra from "./mic/MicExtra.vue";
-import MicProfileHandler from "@/components/profiles/handlers/MicProfileHandler.vue";
+import Gate from "./mic/Gate";
+import Equaliser from "./mic/Equalizer";
+import Compressor from "./mic/Compressor";
+import MicExtra from "./mic/MicExtra";
+import MicProfileHandler from "@/components/profiles/handlers/MicProfileHandler";
 import MicSetupButton from "@/components/sections/system/modals/MicSetupButton.vue";
-import ContentBox from "@/components/ContentBox.vue";
+import ContentBox from "@/components/ContentBox";
 import ContentContainer from "@/components/containers/ContentContainer.vue";
 
 export default {
@@ -30,12 +30,6 @@ export default {
   components: {
     ContentContainer,
     ContentBox, MicSetupButton, MicProfileHandler, MicExtra, Compressor, Equaliser, Gate},
-
-  methods: {
-    mic_open: function() {
-      this.$refs.gate.force_stop_graph();
-    }
-  }
 }
 </script>
 
