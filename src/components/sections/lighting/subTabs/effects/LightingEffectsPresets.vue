@@ -5,7 +5,7 @@ import ColourPicker from "@/components/sections/lighting/elements/ColourPicker.v
 
 import {
   EffectLightingPresets,
-  EffectPresets, getLightingInactiveOptions,
+  EffectPresets,
   LightingInactiveOptions
 } from "@/util/mixerMapping";
 
@@ -13,8 +13,6 @@ import {store} from "@/store";
 import {websocket} from "@/util/sockets";
 
 export default {
-  emits: ["nav-updated"],
-
   name: "LightingEffectsPresets",
   components: {
     GroupContainer,
@@ -26,11 +24,11 @@ export default {
     return {
       effectPresets: EffectLightingPresets,
       activePreset: "EffectSelect1",
+      inactiveOptions: LightingInactiveOptions
     }
   },
 
   methods: {
-    getLightingInactiveOptions,
     presetLabels() {
       let presetLabels = []
 
@@ -61,7 +59,6 @@ export default {
 
     onButtonSelectionChange(id) {
       this.activePreset = EffectLightingPresets[EffectPresets.indexOf(id)];
-      this.$emit("nav-updated");
     },
 
     onInactiveSelectionChange(id) {
@@ -95,32 +92,31 @@ export default {
 </script>
 
 <template>
-  <GroupContainer :title="$t('message.lighting.effects.preset.title')">
+  <GroupContainer title="Preset Buttons">
     <template #right>
-      <button class="applyToAll" @click="applyToAll()">{{ $t('message.lighting.common.applyToAll') }}</button>
+      <button class="applyToAll" @click="applyToAll()">Apply to All</button>
     </template>
     <RadioSelection
-        :title="$t('message.lighting.effects.preset.presetTitle')"
-        max-width="200px"
+        title="Preset"
         group="lighting_effects_presets"
         :options="presetLabels()"
         :selected="getActivePreset()"
         @selection-changed="onButtonSelectionChange"
     />
     <ColourPicker
-        :title="$t('message.lighting.common.activeColour')"
+        title="Active"
         :color-value="activeColor()"
         @colour-changed="onActiveColourChange"
     />
     <RadioSelection
-        :title="$t('message.lighting.common.inactiveOption')"
+        title="Inactive Option"
         group="lighting_effects_preset_inactive_behaviour"
-        :options="getLightingInactiveOptions($t)"
+        :options="inactiveOptions"
         :selected="selectedInactiveOption()"
         @selection-changed="onInactiveSelectionChange"
     />
     <ColourPicker
-        :title="$t('message.lighting.common.inactiveColour')"
+        title="Inactive"
         :color-value="inactiveColor()"
         @colour-changed="onInactiveColourChange"
     />

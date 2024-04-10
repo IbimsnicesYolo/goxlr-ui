@@ -17,7 +17,7 @@ export default {
 
 <style scoped>
   .labelText {
-    padding: 10px 4px;
+    padding: 10px 0;
     color: v-bind(textColour);
 
     height: 18px;
@@ -26,6 +26,5 @@ export default {
     text-transform: uppercase;
     text-align: center;
     font-stretch: condensed;
-    white-space: nowrap;
   }
 </style>

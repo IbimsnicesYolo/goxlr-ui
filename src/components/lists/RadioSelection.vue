@@ -18,7 +18,6 @@ export default {
     selected: String,
     menu: Array,
     menu_id: String,
-    maxWidth: { type: String, required: false, default: "fit-content" }
   },
 
   methods: {
@@ -45,7 +44,7 @@ export default {
 </script>
 
 <template>
-  <WidgetContainer :max-width="maxWidth">
+  <WidgetContainer>
     <template #title>
       <slot name="title">{{ title }}</slot>
     </template>

@@ -3,34 +3,26 @@ import ContentContainer from "@/components/containers/ContentContainer.vue";
 import Presets from "@/components/sections/lighting/subTabs/effects/LightingEffectsPresets.vue";
 import LightingEffectsEncoders from "@/components/sections/lighting/subTabs/effects/LightingEffectsEncoders.vue";
 import LightingEffectsEffects from "@/components/sections/lighting/subTabs/effects/LightingEffectsEffects.vue";
+import CenteredContainer from "@/components/containers/CenteredContainer.vue";
 
 export default {
-  name: "LightingEffects",
-  components: {
-    ContentContainer,
-    Presets,
-    LightingEffectsEncoders,
-    LightingEffectsEffects,
-  },
-
-  methods: {
-    setActivePreset(preset) {
-      this.$refs.presets.onButtonSelectionChange(preset);
-    },
-
-    getNodes() {
-      return [this.$refs.presets.activePreset];
-    },
-  }
-};
+    name: "LightingEffects",
+    components: {
+      CenteredContainer,
+        ContentContainer,
+        Presets,
+        LightingEffectsEncoders,
+        LightingEffectsEffects
+    }
+}
 </script>
 
 <template>
-  <div style="display: flex">
-    <ContentContainer style="padding-top: 15px; padding-bottom: 20px">
-      <Presets ref="presets" @nav-updated="$emit('nav-updated')" />
-      <LightingEffectsEncoders />
-      <LightingEffectsEffects />
+  <CenteredContainer>
+    <ContentContainer style="padding-top: 15px; ; padding-bottom: 20px">
+        <Presets />
+        <LightingEffectsEncoders />
+        <LightingEffectsEffects />
     </ContentContainer>
-  </div>
+  </CenteredContainer>
 </template>

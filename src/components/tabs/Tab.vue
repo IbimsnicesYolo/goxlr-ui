@@ -8,7 +8,6 @@
 export default {
   name: "TabButton",
   props: {
-    id: {type: String, required: true},
     name: {type: String, required: true},
     selected: {type: Boolean, default: false},
   },

@@ -1,21 +1,16 @@
 <template>
-  <ExpandoGroupContainer :title="$t('message.effects.megaphone.title')" @expando-clicked="is_expanded = !is_expanded"
-                         :expanded="is_expanded">
-    <RadioSelection :title="$t('message.effects.megaphone.style')" group="effects_megaphone_style"
-                    :options="getMegaphoneStyles()" :selected="getActiveStyle()" @selection-changed="stylePressed"/>
+  <ExpandoGroupContainer title="Megaphone" @expando-clicked="is_expanded = !is_expanded" :expanded="is_expanded">
+    <RadioSelection title="Style" group="effects_megaphone_style" :options="megaphone_style" :selected="getActiveStyle()" @selection-changed="stylePressed"/>
 
-    <SliderInput :title="$t('message.effects.megaphone.amount')" :slider-min-value=0 :slider-max-value=100
-                 suffix:text-suffix="$t('message.suffixes.percentage')" :slider-value="getAmountValue()"
-                 :store-path="getStorePath('amount')" v-show="is_expanded" @value-changed="setAmountValue"/>
-
-    <SliderInput :title="$t('message.effects.megaphone.postGain')" :slider-min-value=-20 :slider-max-value=20
-                 suffix:text-suffix="$t('message.suffixes.decibels')" :slider-value="getPostGainValue()"
-                 :store-path="getStorePath('post_gain')" v-show="is_expanded" @value-changed="setPostGainValue"/>
+    <SliderInput title="Amount" :slider-min-value=0 :slider-max-value=100 text-suffix="%"
+                 :slider-value="getAmountValue()" :store-path="getStorePath('amount')" v-show="is_expanded" @value-changed="setAmountValue"/>
+    <SliderInput title="Post Gain" :slider-min-value=-20 :slider-max-value=20 text-suffix="dB"
+                 :slider-value="getPostGainValue()" :store-path="getStorePath('post_gain')" v-show="is_expanded" @value-changed="setPostGainValue"/>
   </ExpandoGroupContainer>
 </template>
 
 <script>
-import SliderInput from "@/components/slider/Slider.vue";
+import SliderInput from "@/components/slider/Slider";
 import {store} from "@/store";
 import {websocket} from "@/util/sockets";
 import RadioSelection from "@/components/lists/RadioSelection.vue";
@@ -27,21 +22,19 @@ export default {
   data() {
     return {
       is_expanded: false,
+
+      megaphone_style: [
+        {id: "Megaphone", label: "Megaphone"},
+        {id: "Radio", label: "Radio"},
+        {id: "OnThePhone", label: "On The Phone"},
+        {id: "Overdrive", label: "Overdrive"},
+        {id: "BuzzCutt", label: "Buzz Cutt"},
+        {id: "Tweed", label: "Tweed"}
+      ],
     }
   },
 
   methods: {
-    getMegaphoneStyles() {
-      return [
-        {id: "Megaphone", label: this.$t('message.effects.megaphone.styles.megaphone')},
-        {id: "Radio", label: this.$t('message.effects.megaphone.styles.radio')},
-        {id: "OnThePhone", label: this.$t('message.effects.megaphone.styles.onThePhone')},
-        {id: "Overdrive", label: this.$t('message.effects.megaphone.styles.overdrive')},
-        {id: "BuzzCutt", label: this.$t('message.effects.megaphone.styles.buzzCutt')},
-        {id: "Tweed", label: this.$t('message.effects.megaphone.styles.tweed')}
-      ];
-    },
-
     getActiveStyle() {
       return store.getActiveDevice().effects.current.megaphone.style;
     },

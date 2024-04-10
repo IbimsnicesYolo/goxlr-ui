@@ -196,6 +196,5 @@ input[type='range']::-moz-range-thumb {
 .rotation-wrapper {
   height: v-bind(heightString);
   width: 90px;
-  margin: 0 auto;
 }
 </style>

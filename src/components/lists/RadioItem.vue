@@ -58,11 +58,7 @@ export default {
 
   computed: {
     right_width: function () {
-      if (this.$refs.right_ref.clientWidth === 0) {
-        return "0px";
-      }
-
-      return (this.$refs.right_ref.clientWidth - 12) + "px";
+      return this.$refs.right_ref.clientWidth + "px";
     },
   }
 }
@@ -79,7 +75,7 @@ label {
   display: block;
   box-sizing: border-box;
 
-  width: calc(100% - v-bind(right_width));
+  width: calc(100% - 12px - v-bind(right_width));
   margin: auto 0 auto auto;
   background-color: v-bind(background);
 

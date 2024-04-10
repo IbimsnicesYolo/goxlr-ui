@@ -1,6 +1,6 @@
 <template>
   <div class="assignment">
-    <div style="flex-grow: 1">
+    <div>
       <div role="button" class="button" @click="setMixMonitor" :class="{ highlight: isMixMonitored() }">
         <div class="icon" :class="{ faded: !isMixMonitored() }">
           <font-awesome-icon icon="fa-solid fa-headphones"/>
@@ -11,14 +11,14 @@
     <div role="radiogroup">
       <div class="box">
         <div>
-          <label :for="getRadioId('A')" class="label MixA" :class="{ selected: isDeviceMix('A') }">{{$t('message.mixer.channelA')}}</label>
+          <label :for="getRadioId('A')" class="label MixA" :class="{ selected: isDeviceMix('A') }">A</label>
           <input class="screenreader-only" type="radio" :id="getRadioId('A')" @change="setDeviceMix"
-                 :checked="isDeviceMix('A')" :name="name" value="A" :aria-label="$t('message.mixer.channelA')"/>
+                 :checked="isDeviceMix('A')" :name="name" value="A" aria-label="A"/>
         </div>
         <div>
-          <label :for="getRadioId('B')" class="label MixB" :class="{ selected: isDeviceMix('B') }">{{$t('message.mixer.channelB')}}</label>
+          <label :for="getRadioId('B')" class="label MixB" :class="{ selected: isDeviceMix('B') }">B</label>
           <input class="screenreader-only" type="radio" :id="getRadioId('B')" @change="setDeviceMix"
-                 :checked="isDeviceMix('B')" :name="name" value="B" :aria-label="$t('message.mixer.channelB')"/>
+                 :checked="isDeviceMix('B')" :name="name" value="B" aria-label="B"/>
         </div>
       </div>
     </div>
@@ -74,7 +74,6 @@ export default {
   display: flex;
   flex-direction: row;
   gap: 5px;
-  width: 100%;
 }
 
 .button {
@@ -83,7 +82,7 @@ export default {
   text-align: left;
   padding: 4px 6px;
 
-  min-width: 150px;
+  width: 150px;
   height: 34px;
 
   box-sizing: border-box;
@@ -91,7 +90,6 @@ export default {
   background-color: #3b413f;
   color: #fff;
   font-family: LeagueMonoCondensed, sans-serif;
-  white-space: nowrap;
 }
 
 .button.highlight {
@@ -109,10 +107,9 @@ export default {
 }
 
 .button .text {
-  flex-grow: 1;
   padding-left: 10px;
   padding-right: 10px;
-  width: 100%;
+  width: 96px;
   margin: auto;
   text-align: center;
   box-sizing: border-box;

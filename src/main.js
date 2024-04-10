@@ -1,5 +1,6 @@
 import {createApp} from 'vue'
 import App from './App.vue'
+import {websocket} from "@/util/sockets";
 import vClickOutside from "click-outside-vue3";
 
 /**
@@ -17,25 +18,19 @@ import {
     faMicrophoneLines, faCircleQuestion, faFloppyDisk, faFileCirclePlus, faCopy, faTrash, faCheckCircle, faCheck,
     faFolder, faEllipsisVertical, faPlay, faStop, faXmark, faGear, faBookOpen, faCircleInfo, faChevronLeft,
     faChevronRight, faPowerOff, faLink, faLinkSlash, faVolumeXmark, faMicrophoneSlash, faMusic, faTurnUp, faHeadphones,
-    faUpLong, faDownLong, faRepeat, faWaveSquare, faSquare, faSquareCheck
+    faUpLong, faDownLong, faRepeat
 } from "@fortawesome/free-solid-svg-icons";
-import {createI18n} from "vue-i18n";
-import {messages} from "@/lang/config.js";
 
 library.add(
     faMicrophoneLines, faCircleQuestion, faFloppyDisk, faEllipsisVertical, faFileCirclePlus, faCopy, faTrash,
     faCheckCircle, faCheck, faFolder, faTrash, faPlay, faStop, faXmark, faGear, faBookOpen, faCircleInfo,
     faChevronLeft, faChevronRight, faPowerOff, faLink, faLinkSlash, faVolumeXmark, faMicrophoneSlash, faMusic,
-    faTurnUp, faHeadphones, faUpLong, faDownLong, faRepeat, faWaveSquare, faSquare, faSquareCheck
+    faTurnUp, faHeadphones, faUpLong, faDownLong, faRepeat
 );
 
-
-let app = createApp(App);
-app.component('font-awesome-icon', FontAwesomeIcon);
-app.use(vClickOutside);
-app.use(createI18n({
-    locale: "en_GB",
-    fallbackLocale: "en_GB",
-    messages
-}));
-app.mount('#app');
+websocket.connect().then(() => {
+    let app = createApp(App);
+    app.component('font-awesome-icon', FontAwesomeIcon);
+    app.use(vClickOutside);
+    app.mount('#app');
+});

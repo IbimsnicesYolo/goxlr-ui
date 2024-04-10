@@ -2,50 +2,36 @@
   <!-- Build the Modal -->
   <CenteredContainer>
     <ContentContainer>
-      <RadioSelection ref="selection" :title="$t('message.microphone.setup.type')" group="mic_type" :options="getMicrophoneOptions()" :selected="getActiveMicType()" @selection-changed="handleButtonPress" />
+      <RadioSelection ref="selection" title="Mic Type" group="mic_type" :options="microphone_options" :selected="getActiveMicType()" @selection-changed="handleButtonPress" />
 
-      <Slider :title="$t('message.microphone.setup.gain')" :slider-min-value=0 :slider-max-value=72 :text-suffix="$t('message.suffixes.decibels')"
+      <Slider title="Gain" :slider-min-value=0 :slider-max-value=72 text-suffix="dB"
               :slider-value=getGainValue() :store-path="getStorePath()" @value-changed="setGain" />
-
-      <AudioMeter :active="polling" />
     </ContentContainer>
   </CenteredContainer>
 </template>
 
 <script>
-import Slider from "@/components/slider/Slider.vue";
+import Slider from "@/components/slider/Slider";
 import {store} from "@/store";
 import {websocket} from "@/util/sockets";
 import RadioSelection from "@/components/lists/RadioSelection.vue";
 import ContentContainer from "@/components/containers/ContentContainer.vue";
 import CenteredContainer from "@/components/containers/CenteredContainer.vue";
-import {isDeviceMini} from "@/util/util";
-import AudioMeter from "@/components/sections/mic/AudioMeter.vue";
 
 export default {
   name: "SetupModel",
-  components: {AudioMeter, CenteredContainer, ContentContainer, RadioSelection, Slider},
+  components: {CenteredContainer, ContentContainer, RadioSelection, Slider},
   data: function() {
     return {
-      polling: false,
-      current_value: -72,
+      microphone_options: [
+        {id: "Dynamic", label: "Dynamic"},
+        {id: "Condenser", label: "Condenser (+48V)"},
+        {id: "Jack", label: "3.5mm"}
+      ]
     }
   },
 
   methods: {
-    getMicrophoneOptions() {
-      let voltage = "48";
-      if (isDeviceMini()) {
-        voltage = "24";
-      }
-
-      return [
-        {id: "Dynamic", label: this.$t('message.microphone.setup.xlr')},
-        {id: "Condenser", label: this.$t('message.microphone.setup.phantom', {voltage: voltage})},
-        {id: "Jack", label: this.$t('message.microphone.setup.jack')}
-      ];
-    },
-
     getActiveMicType() {
       return store.getActiveDevice().mic_status.mic_type
     },
@@ -81,15 +67,8 @@ export default {
       let activeType = store.getActiveDevice().mic_status.mic_type;
       let button = this.$refs.selection.getButtonByRef(activeType);
       button.focus();
-    },
-
-    opened() {
-      this.polling = true;
-    },
-    closed() {
-      this.polling = false;
     }
-  },
+  }
 }
 </script>
 
